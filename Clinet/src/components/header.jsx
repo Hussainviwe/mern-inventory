@@ -1,5 +1,5 @@
 import { Button, Navbar, TextInput } from "flowbite-react";
-import { Link , useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
 
@@ -37,14 +37,13 @@ export default function Header() {
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        
-        <Navbar.Link active={path === "/"} as = {"div"}>
+        <Navbar.Link active={path === "/"} as={"div"}>
           <Link to="/">Home</Link>
         </Navbar.Link>
-      <Navbar.Link active={path === "/About"}  as = {"div"}>
+        <Navbar.Link active={path === "/About"} as={"div"}>
           <Link to="/About">About</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/Dashboard"}  as = {"div"}>
+        <Navbar.Link active={path === "/Dashboard"} as={"div"}>
           <Link to="/Dashboard">Dashboard</Link>
         </Navbar.Link>
       </Navbar.Collapse>
