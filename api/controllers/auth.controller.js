@@ -1,5 +1,5 @@
 import User from "../model/user.model.js";
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const signup = async (req, res , next) => {
@@ -16,7 +16,7 @@ export const signup = async (req, res , next) => {
     next (errorHandler(400, "All fields are required")); 
   }
 
-  const hashPassword = bcrypt.hashSync(password, 10);
+  const hashPassword = bcryptjs.hashSync(password, 10);
 
   const user = new User({
     username,
@@ -47,7 +47,7 @@ export const signin = async (req, res, next) => {
       return next(errorHandler(400, 'Invalid password'));
     }
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
-    const { password: pass, ...rest } = validUser._doc;
+     const { password: pass, ...rest } = validUser._doc;
     res
       .status(200)
       .cookie('access_token', token, {
