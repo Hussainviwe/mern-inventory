@@ -35,9 +35,7 @@ export default function Inventory() {
         <button className="bg-blue-500 text-white px-4 py-2 rounded">
           Add Item
         </button>
-        <button className="bg-blue-500 text-white px-1 py-2 rounded">
-          Delete All
-        </button>
+       
       </div>
 
       <table className="table-auto w-full border-collapse border border-gray-300">
