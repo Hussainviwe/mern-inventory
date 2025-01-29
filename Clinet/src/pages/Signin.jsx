@@ -9,14 +9,14 @@ import {
 } from '../redux/user/userSlice';
 
 export default function SignIn() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ email: '', password: '' }); // ✅ Fix: Set initial state
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { loading, error: errorMessage } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
@@ -48,8 +48,9 @@ export default function SignIn() {
   };
 
   return (
-    <div className='min-h-screen mt-20'>
-      <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
+    <div className='min-h-screen mt-20 flex items-center justify-center'>
+      <div className='p-6 max-w-3xl mx-auto flex flex-col md:flex-row md:items-center gap-5 shadow-lg bg-white dark:bg-gray-900 rounded-lg'>
+        
         {/* Left Section */}
         <div className='flex-1'>
           <Link to='/' className='font-bold dark:text-white text-4xl'>
@@ -58,9 +59,8 @@ export default function SignIn() {
             </span>
             Inventory
           </Link>
-          <p className='text-sm mt-5'>
-            This is a demo project. You can sign in with your email and password
-            or with Google.
+          <p className='text-sm mt-5 text-gray-600 dark:text-gray-300'>
+            This is a demo project. You can sign in with your email and password or with Google.
           </p>
         </div>
 
@@ -73,6 +73,7 @@ export default function SignIn() {
                 type='email'
                 placeholder='name@company.com'
                 id='email'
+                value={formData.email}  // ✅ Fix: Controlled input
                 onChange={handleChange}
                 required
               />
@@ -83,6 +84,7 @@ export default function SignIn() {
                 type='password'
                 placeholder='**********'
                 id='password'
+                value={formData.password}  // ✅ Fix: Controlled input
                 onChange={handleChange}
                 required
               />
