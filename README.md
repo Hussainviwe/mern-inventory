@@ -35,4 +35,4 @@ This project is a simple yet effective Inventory Management System built with th
    - Run the server:
        npm run dev
 
-## still developing and hoping to add more unique features to build the inventory system to the standards of the real world.
+## Still developing and hoping to add more unique features to build the inventory system to the standards of the real world.
