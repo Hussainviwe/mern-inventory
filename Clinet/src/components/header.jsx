@@ -1,15 +1,32 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useContext } from "react";
 import { ThemeContext } from "./ThemeLayout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/user/userSlice"; 
 
 export default function Header() {
   const path = useLocation().pathname;
-  const {currentUser} = useSelector(state => state.user)
+  const { currentUser } = useSelector(state => state.user);
   const { darkMode, setDarkMode } = useContext(ThemeContext);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSignOut = () => {
+    // Clear the user session (e.g., removing user info from localStorage)
+    localStorage.removeItem("user");
+
+    // Dispatch the logout action to clear Redux state
+    dispatch(logout());
+
+    // Optionally reset dark mode
+    setDarkMode(false);
+
+    // Redirect to the login page
+    navigate("/signin");
+  };
 
   return (
     <Navbar className="border-b-2">
@@ -44,36 +61,34 @@ export default function Header() {
         </Button>
         {currentUser ? (
           <Dropdown
-          arrowIcon={false}
-          inline
-          label={
-            <Avatar
-            alt="user"
-            img={currentUser.profilePicture}
-            rounded
-            />
-          }
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar
+                alt="user"
+                img={currentUser.profilePicture}
+                rounded
+              />
+            }
           >
-          <Dropdown.Header>
-          <span className='block text-sm'>@{currentUser.username}</span>
-          <span className='block text-sm font-medium truncate' >{currentUser.email}</span>
-          </Dropdown.Header>
+            <Dropdown.Header>
+              <span className="block text-sm">@{currentUser.username}</span>
+              <span className="block text-sm font-medium truncate">{currentUser.email}</span>
+            </Dropdown.Header>
 
-          <Link to={ '/dashboard?tab=profile'}>
+            <Link to={'/dashboard?tab=profile'}>
               <Dropdown.Item>Profile</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item>Signout</Dropdown.Item>
-          </Link>
+            </Link>
+            <Dropdown.Item onClick={handleSignOut}>Signout</Dropdown.Item>
           </Dropdown>
-        ) :
-          (
-            <Link to="/signin">
+        ) : (
+          <Link to="/signin">
             <Button gradientDuoTone="purpleToBlue" outline>
               Signin
             </Button>
           </Link>
-          )
-        }
+        )}
         
         <Navbar.Toggle />
       </div>
