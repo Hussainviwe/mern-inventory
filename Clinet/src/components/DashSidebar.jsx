@@ -3,15 +3,15 @@ import { Link, useLocation } from 'react-router-dom';
 
 // Dummy components for different pages
 function Profile() {
-  return <h2 style={{ color: "#333" }}>👤 Profile Page</h2>;
+  
 }
 
 function Settings() {
-  return <h2 style={{ color: "#333" }}>⚙️ Settings Page</h2>;
+  
 }
 
 function DashboardHome() {
-  return <h2 style={{ color: "#333" }}>🏠 Dashboard Overview</h2>;
+  
 }
 
 export default function Dashboard() {
@@ -35,7 +35,7 @@ export default function Dashboard() {
       
       {/* Sidebar */}
       <div style={{
-        width: "250px",
+        width: "300px",
         background: "linear-gradient(135deg, #6E44FF, #B43E8F)",
         color: "#fff",
         padding: "20px",
@@ -65,7 +65,6 @@ export default function Dashboard() {
         {tab === "profile" && <Profile />}
         {tab === "settings" && <Settings />}
         {tab === "home" && <DashboardHome />}
-        {!tab && <h2 style={{ color: "#333" }}>🎉 Welcome to the Dashboard</h2>}
       </div>
     </div>
   );
