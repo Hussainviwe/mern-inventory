@@ -4,27 +4,32 @@ import dotenv from "dotenv";
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Check if MONGO URI is being loaded correctly
+console.log('Mongo URI:', process.env.MONGO);
+
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
     console.log("Mongo DB connected");
   })
   .catch((err) => {
-    console.log(err);
+    console.error("Mongo DB connection error:", err);
   });
+
 const app = express();
 
+// Middleware to parse incoming JSON
 app.use(express.json());
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
-
+// API Routes
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 
+// Error Handling Middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
@@ -34,4 +39,8 @@ app.use((err, req, res, next) => {
     message,
   });
 });
- 
+
+// Start the server
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});

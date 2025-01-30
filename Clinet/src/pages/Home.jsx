@@ -3,13 +3,21 @@ import React, { useState, useEffect } from 'react';
 export default function Inventory() {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState('');
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   useEffect(() => {
-    // Fetch inventory items from the server (mock API call)
     fetch('/api/inventory')
       .then((response) => response.json())
-      .then((data) => setItems(data))
-      .catch((error) => console.error('Error fetching inventory:', error));
+      .then((data) => {
+        setItems(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching inventory:', error);
+        setError('Failed to load inventory.');
+        setLoading(false);
+      });
   }, []);
 
   const handleSearch = (e) => {
@@ -22,8 +30,9 @@ export default function Inventory() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Inventory</h1>
+      <h1 className="text-2xl font-bold mb-4">Inventory Dashboard</h1>
       
+      {/* Search and Add Item Section */}
       <div className="flex justify-between items-center mb-4">
         <input
           type="text"
@@ -37,6 +46,29 @@ export default function Inventory() {
         </button>
       </div>
 
+      {/* Loading and Error Handling */}
+      {loading && <p className="text-center">Loading inventory...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {/* Statistics Section */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="bg-green-200 p-4 rounded-lg shadow-md text-center">
+          <h2 className="text-lg font-semibold">Total Items</h2>
+          <p className="text-2xl font-bold">{items.length}</p>
+        </div>
+        <div className="bg-blue-200 p-4 rounded-lg shadow-md text-center">
+          <h2 className="text-lg font-semibold">Total Quantity</h2>
+          <p className="text-2xl font-bold">{items.reduce((acc, item) => acc + item.quantity, 0)}</p>
+        </div>
+        <div className="bg-yellow-200 p-4 rounded-lg shadow-md text-center">
+          <h2 className="text-lg font-semibold">Total Value</h2>
+          <p className="text-2xl font-bold">$
+            {items.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
+          </p>
+        </div>
+      </div>
+      
+      {/* Inventory Table */}
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr>

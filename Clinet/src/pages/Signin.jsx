@@ -1,44 +1,58 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
+
 export default function SignIn() {
-  const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ email: '', password: '' }); // ✅ Fix: Set initial state
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return setErrorMessage('Please fill out all fields.');
+      dispatch(signInFailure('Please fill all the fields'));
+      return;
     }
+
     try {
-      setLoading(true);
-      setErrorMessage(null);
+      dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (data.success === false) {
-        return setErrorMessage(data.message);
+
+      if (!res.ok) {
+        dispatch(signInFailure(data.message || 'Sign-in failed'));
+        return;
       }
-      setLoading(false);
-      if (res.ok) {
-        navigate('/');
-      }
+
+      dispatch(signInSuccess(data));
+      navigate('/');
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message || 'Something went wrong'));
     }
   };
+
   return (
-    <div className='min-h-screen mt-20'>
-      <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
-        {/* left */}
+    <div className='min-h-screen mt-20 flex items-center justify-center'>
+      <div className='p-6 max-w-3xl mx-auto flex flex-col md:flex-row md:items-center gap-5 shadow-lg bg-white dark:bg-gray-900 rounded-lg'>
+        
+        {/* Left Section */}
         <div className='flex-1'>
           <Link to='/' className='font-bold dark:text-white text-4xl'>
             <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
@@ -46,12 +60,12 @@ export default function SignIn() {
             </span>
             Inventory
           </Link>
-          <p className='text-sm mt-5'>
-            This is a demo project. You can sign in with your email and password
-            or with Google.
+          <p className='text-sm mt-5 text-gray-600 dark:text-gray-300'>
+            This is a demo project. You can sign in with your email and password or with Google.
           </p>
         </div>
-        {/* right */}
+
+        {/* Right Section */}
         <div className='flex-1'>
           <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
             <div>
@@ -60,7 +74,9 @@ export default function SignIn() {
                 type='email'
                 placeholder='name@company.com'
                 id='email'
+                value={formData.email}  // ✅ Fix: Controlled input
                 onChange={handleChange}
+                required
               />
             </div>
             <div>
@@ -69,14 +85,12 @@ export default function SignIn() {
                 type='password'
                 placeholder='**********'
                 id='password'
+                value={formData.password}  // ✅ Fix: Controlled input
                 onChange={handleChange}
+                required
               />
             </div>
-            <Button
-              gradientDuoTone='purpleToPink'
-              type='submit'
-              disabled={loading}
-            >
+            <Button gradientDuoTone='purpleToPink' type='submit' disabled={loading}>
               {loading ? (
                 <>
                   <Spinner size='sm' />
@@ -86,9 +100,10 @@ export default function SignIn() {
                 'Sign In'
               )}
             </Button>
+            <OAuth />
           </form>
           <div className='flex gap-2 text-sm mt-5'>
-            <span>Dont Have an account?</span>
+            <span> Don't have an account?</span>
             <Link to='/signup' className='text-blue-500'>
               Sign Up
             </Link>
