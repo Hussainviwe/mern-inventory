@@ -3,15 +3,15 @@ import { Link, useLocation } from 'react-router-dom';
 
 // Dummy components for different pages
 function Profile() {
-  
+  return <h2>Profile Page</h2>;
 }
 
 function Settings() {
-  
+  return <h2>Settings Page</h2>;
 }
 
 function DashboardHome() {
-  
+  return <h2>Home Page</h2>;
 }
 
 export default function Dashboard() {
@@ -29,22 +29,22 @@ export default function Dashboard() {
   return (
     <div style={{
       display: "flex",
-      height: "100vh",
-      background: "#F5F5F5"
+      minHeight: "100vh",
+      backgroundColor: "#F5F5F5"
     }}>
       
       {/* Sidebar */}
       <div style={{
-        width: "300px",
+        width: "280px",
         background: "linear-gradient(135deg, #6E44FF, #B43E8F)",
         color: "#fff",
-        padding: "20px",
+        padding: "30px 15px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        boxShadow: "4px 0 10px rgba(0, 0, 0, 0.1)"
+        boxShadow: "4px 0 12px rgba(0, 0, 0, 0.1)"
       }}>
-        <h2 style={{ marginBottom: "20px" }}>Dashboard</h2>
+        <h2 style={{ marginBottom: "30px", fontSize: "24px", fontWeight: "bold" }}>Dashboard</h2>
         
         {/* Sidebar Buttons Container */}
         <div style={{ width: "100%" }}>
@@ -55,17 +55,7 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div style={{
-        flex: 1,
-        padding: "30px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-        {tab === "profile" && <Profile />}
-        {tab === "settings" && <Settings />}
-        {tab === "home" && <DashboardHome />}
-      </div>
+      
     </div>
   );
 }
@@ -75,16 +65,16 @@ function SidebarButton({ label, to, active }) {
   return (
     <Link to={to} style={{
       display: "block",
-      padding: "15px",
-      margin: "10px 0",
-      borderRadius: "10px",
+      padding: "12px 20px",
+      margin: "8px 0",
+      borderRadius: "12px",
       textAlign: "center",
-      background: active ? "#FFD700" : "rgba(255, 255, 255, 0.2)",
-      color: active ? "#333" : "#fff",
-      fontWeight: "bold",
+      background: active ? "#FFD700" : "rgba(255, 255, 255, 0.15)",
+      color: active ? "#333" : "#ffffff",
+      fontWeight: "600",
       textDecoration: "none",
-      transition: "0.3s ease-in-out",
-      boxShadow: active ? "0px 4px 10px rgba(255, 215, 0, 0.5)" : "none"
+      transition: "background 0.3s, transform 0.2s",
+      boxShadow: active ? "0px 4px 12px rgba(255, 215, 0, 0.5)" : "none"
     }}>
       {label}
     </Link>
