@@ -29,7 +29,7 @@ export default function Dashboard() {
   return (
     <div style={{
       display: "flex",
-      minHeight: "100vh",
+      minHeight: "140vh",
       backgroundColor: "#F5F5F5"
     }}>
       
@@ -41,6 +41,7 @@ export default function Dashboard() {
         padding: "30px 15px",
         display: "flex",
         flexDirection: "column",
+        gap: "30px",
         alignItems: "center",
         boxShadow: "4px 0 12px rgba(0, 0, 0, 0.1)"
       }}>

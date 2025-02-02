@@ -1,22 +1,41 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ThemeContext } from './ThemeLayout';
 
 const DashSettings = () => {
   const { darkMode } = useContext(ThemeContext);
-  const [formData, setFormData] = useState({
-    storeName: '',
-    storeEmail: '',
-    storePhone: '',
-    businessHours: '',
-    lowStockThreshold: 10,
-    lowStockNotification: true,
-    orderUpdateNotification: true,
-    password: '',
-    confirmPassword: '',
-    twoFactorAuth: false,
-    preferredLanguage: 'English',
-    preferredCurrency: 'USD',
+
+  // Initialize state from localStorage or default values
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem('settingsFormData');
+    return savedData ? JSON.parse(savedData) : {
+      storeName: '',
+      storeEmail: '',
+      storePhone: '',
+      businessHours: '',
+      lowStockThreshold: 10,
+      lowStockNotification: true,
+      orderUpdateNotification: true,
+      password: '',
+      confirmPassword: '',
+      twoFactorAuth: false,
+      preferredLanguage: 'English',
+      preferredCurrency: 'USD',
+    };
   });
+
+  // State to track if the settings have been saved
+  const [isSaved, setIsSaved] = useState(() => {
+    const savedStatus = localStorage.getItem('isSaved');
+    return savedStatus ? JSON.parse(savedStatus) : false; // false if no saved status exists
+  });
+
+  useEffect(() => {
+    // Save formData to localStorage every time it changes
+    localStorage.setItem('settingsFormData', JSON.stringify(formData));
+
+    // Save the isSaved status in localStorage
+    localStorage.setItem('isSaved', JSON.stringify(isSaved));
+  }, [formData, isSaved]);
 
   const handleInputChange = (e) => {
     const { id, value, type, checked } = e.target;
@@ -32,6 +51,7 @@ const DashSettings = () => {
       return;
     }
     console.log('Settings saved:', formData);
+    setIsSaved(true); // Lock the button after saving
   };
 
   return (
@@ -93,16 +113,17 @@ const DashSettings = () => {
           <button
             onClick={handleSave}
             style={{
-              backgroundColor: '#007bff',
+              backgroundColor: isSaved ? '#D3D3D3' : '#007bff', // Ash color when saved
               color: 'white',
               padding: '10px 20px',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer',
+              cursor: isSaved ? 'not-allowed' : 'pointer', // Disable cursor when saved
               marginTop: '20px',
             }}
+            disabled={isSaved} // Disable the button when settings are saved
           >
-            Save Settings
+            {isSaved ? 'Settings Saved' : 'Save Settings'}
           </button>
         </form>
       </div>

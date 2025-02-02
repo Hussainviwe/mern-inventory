@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, TextInput, Table } from 'flowbite-react';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -12,6 +12,19 @@ export default function DashHome() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentSlider, setCurrentSlider] = useState(0);
+
+  // Load items from localStorage if they exist
+  useEffect(() => {
+    const savedItems = localStorage.getItem('items');
+    if (savedItems) {
+      setItems(JSON.parse(savedItems));
+    }
+  }, []);
+
+  // Save items to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('items', JSON.stringify(items));
+  }, [items]);
 
   const handleInputChange = (e) => {
     setNewItem({ ...newItem, [e.target.name]: e.target.value });
@@ -35,11 +48,14 @@ export default function DashHome() {
     }
   };
 
-  const updateItem = (index) => {
-    const updatedItems = [...items];
-    updatedItems[index] = editItem;
-    setItems(updatedItems);
-    setEditItem({ name: '', quantity: '', price: '', category: '' });
+  const updateItem = () => {
+    if (items.length > 0) {
+      const updatedItems = [...items];
+      updatedItems[items.length - 1] = editItem; // Update the last item
+      setItems(updatedItems);
+      setEditItem({ name: '', quantity: '', price: '', category: '' });
+      alert("Item updated successfully!");
+    }
   };
 
   const handleDelete = (index) => {
@@ -52,6 +68,12 @@ export default function DashHome() {
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleLogout = () => {
+    // Clear localStorage when the user logs out
+    localStorage.removeItem('items');
+    dispatch({ type: 'LOGOUT' }); // Example logout action
+  };
 
   return (
     <div className='max-w-4xl mx-auto p-5 w-full bg-white rounded-lg shadow-lg'>
@@ -103,7 +125,7 @@ export default function DashHome() {
           <div className={`w-full ${currentSlider === 1 ? 'block' : 'hidden'}`}>
             <div className="p-4 border rounded-lg shadow-md bg-gray-50">
               <h2 className="text-center text-2xl font-semibold mb-4 text-gray-700">Update Item</h2>
-              <form className='flex flex-col gap-4 mb-5' onSubmit={(e) => { e.preventDefault(); updateItem() }}>
+              <form className='flex flex-col gap-4 mb-5' onSubmit={(e) => { e.preventDefault(); updateItem(); }}>
                 <TextInput 
                   type='text' 
                   name='name' 
@@ -176,7 +198,18 @@ export default function DashHome() {
           <Button onClick={() => setCurrentSlider(0)} gradientDuoTone='greenToBlue' outline>
             Add Item
           </Button>
-          <Button onClick={() => setCurrentSlider(1)} gradientDuoTone='purpleToPink' outline>
+          <Button
+            onClick={() => {
+              if (items.length > 0) {
+                setEditItem(items[items.length - 1]); // Set last item in edit mode
+                setCurrentSlider(1);
+              } else {
+                alert("No items available to update!");
+              }
+            }}
+            gradientDuoTone='purpleToPink'
+            outline
+          >
             Update Item
           </Button>
           <Button onClick={() => setCurrentSlider(2)} gradientDuoTone='redToYellow' outline>
@@ -185,9 +218,9 @@ export default function DashHome() {
         </div>
       </div>
 
-      {/* Display Added Items Table outside the container */}
-      <div className="mt-8 p-4 bg-gray-50 rounded-lg shadow-md">
-        <h2 className="text-center text-2xl font-semibold mb-4 text-gray-700">Added Items</h2>
+      {/* Displaying the Stock in a Table */}
+      <div className="mt-6">
+        <h2 className="text-center text-2xl font-semibold text-gray-700 mb-4">Stock Items</h2>
         <Table>
           <Table.Head>
             <Table.HeadCell>Item Name</Table.HeadCell>
@@ -208,8 +241,11 @@ export default function DashHome() {
         </Table>
       </div>
 
-      <div className='mt-5'>
-        <span>Total Quantity: {totalQuantity}</span>
+      {/* Logout Button */}
+      <div className="mt-4 text-center">
+        <Button onClick={handleLogout} gradientDuoTone='redToYellow'>
+          Logout
+        </Button>
       </div>
     </div>
   );
