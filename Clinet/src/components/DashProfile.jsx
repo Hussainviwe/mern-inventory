@@ -1,21 +1,26 @@
 import { useState, useRef } from 'react';
-import { Button, TextInput, Alert } from 'flowbite-react';
+import { Button, TextInput, Alert, Modal } from 'flowbite-react'; // Make sure Modal is imported
+import { HiOutlineExclamationCircle } from 'react-icons/hi'; // Import the exclamation icon
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/user/userSlice';
 import {
   updateStart,
   updateSuccess,
   updateFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from '../redux/user/userSlice';
 
 export default function DashProfile() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  
+
   const [profileImage, setProfileImage] = useState(currentUser?.profilePicture || '');
   const fileInputRef = useRef(null); // Changed to useRef
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleSignOut = () => {
     dispatch(logout());
@@ -70,6 +75,24 @@ export default function DashProfile() {
     }
   };
 
+  const handleDeleteUser = async () => {
+    setShowModal(false);
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        dispatch(deleteUserFailure(data.message));
+      } else {
+        dispatch(deleteUserSuccess(data));
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
+
   if (!currentUser) return <div>Loading...</div>; // Ensure user data is present
 
   return (
@@ -101,7 +124,7 @@ export default function DashProfile() {
         </Button>
       </form>
       <div className="text-red-500 flex justify-between mt-5">
-        <span className='cursor-pointer'>Delete Account</span>
+        <span onClick={() => setShowModal(true)}  className='cursor-pointer'>Delete Account</span>
         <span className='cursor-pointer' onClick={handleSignOut}>Sign Out</span>
       </div>
       {updateUserSuccess && (
@@ -114,6 +137,31 @@ export default function DashProfile() {
           {updateUserError}
         </Alert>
       )}
+
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size='md'
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className='text-center'>
+            <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+              Are you sure you want to delete your account?
+            </h3>
+            <div className='flex justify-center gap-4'>
+              <Button color='failure' onClick={handleDeleteUser}>
+                Yes, I'm sure
+              </Button>
+              <Button color='gray' onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

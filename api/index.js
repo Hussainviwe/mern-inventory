@@ -8,8 +8,7 @@ import cookieParser from "cookie-parser";
 // Load environment variables from .env file
 dotenv.config();
 
-// Check if MONGO URI is being loaded correctly
-console.log('Mongo URI:', process.env.MONGO);
+
 
 // Connect to MongoDB
 mongoose
