@@ -14,6 +14,10 @@ function DashboardHome() {
   return <h2>Home Page</h2>;
 }
 
+function DashboardInventory() {
+  return <h2>Inventory Page</h2>;
+}
+
 export default function Dashboard() {
   const location = useLocation();
   const [tab, setTab] = useState('');
@@ -52,6 +56,8 @@ export default function Dashboard() {
           <SidebarButton label="🏠 Home" to="/dashboard?tab=home" active={tab === "home"} />
           <SidebarButton label="👤 Profile" to="/dashboard?tab=profile" active={tab === "profile"} />
           <SidebarButton label="⚙️ Settings" to="/dashboard?tab=settings" active={tab === "settings"} />
+          <SidebarButton label="📦 Inventory" to="/dashboard?tab=inventory" active={tab === "inventory"} />
+
         </div>
       </div>
 
