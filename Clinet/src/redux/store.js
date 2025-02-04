@@ -1,10 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import userReducer from './user/userSlice';
-import { persistReducer, persistStore } from 'redux-persist'; // ✅ Added missing import
+import inventoryReducer from './inventory/inventorySlice'; // ✅ Added Inventory Reducer
+import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const rootReducer = combineReducers({
   user: userReducer,
+  inventory: inventoryReducer, // ✅ Include Inventory Reducer
 });
 
 const persistConfig = {
@@ -21,4 +23,4 @@ export const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }),
 });
 
-export const persistor = persistStore(store); 
+export const persistor = persistStore(store);
