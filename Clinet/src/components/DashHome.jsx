@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, TextInput, Table, Modal } from 'flowbite-react';
 import { useSelector, useDispatch } from 'react-redux';
+import { FaBox } from 'react-icons/fa';
 
 export default function DashHome() {
   const dispatch = useDispatch();
@@ -100,11 +101,39 @@ export default function DashHome() {
   };
 
   const totalQuantity = items.reduce((sum, item) => sum + parseInt(item.quantity || 0, 10), 0);
+  const totalInventoryItems = items.length;
 
   return (
     <div className='max-w-4xl mx-auto p-5 w-full bg-white rounded-lg shadow-lg relative'>
+      {/* Stock Summaries */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        {/* In-Stock Summary */}
+        <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 w-full rounded-md shadow-md">
+          <div className="flex justify-between">
+            <div>
+              <h3 className="text-gray-500 text-md uppercase">In Stock Items</h3>
+              <p className="text-2xl">{totalQuantity}</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-sm text-gray-400 mb-1">Items Summary</span>
+              <FaBox className="bg-green-600 text-white text-5xl p-3 shadow-lg" />
+            </div>
+          </div>
+        </div>
+
+        {/* Total Inventory Summary */}
+        <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 w-full rounded-md shadow-md">
+          <div className="flex justify-between">
+            <div>
+              <h3 className="text-gray-500 text-md uppercase">Total Inventory Items</h3>
+              <p className="text-2xl">{totalInventoryItems}</p>
+            </div>
+            <FaBox className="bg-indigo-600 text-white text-5xl p-3 shadow-lg" />
+          </div>
+        </div>
+      </div>
       {/* Add Button at the Top Corner */}
-      <div className="absolute top-5 right-5">
+      <div className="absolute my-7 right-5">
         <Button gradientDuoTone='greenToBlue' onClick={() => setIsModalOpen(true)}>
           Add Item
         </Button>
