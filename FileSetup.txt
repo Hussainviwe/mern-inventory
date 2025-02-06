@@ -1,0 +1,61 @@
+ MERN Inventory Project - File Setup Guide
+
+Backend (Node.js + Express)
+
+1. config/db.js
+   - Contains the connection logic to MongoDB using Mongoose. This file ensures that your backend can interact with the database, managing the connection settings and environment variables.
+
+2. controllers/inventoryController.js
+   - Contains the logic for handling inventory operations such as adding, updating, deleting, and retrieving inventory items. It acts as the bridge between the database and the user interface.
+
+3. models/Inventory.js
+   - Defines the structure of the inventory items in the database using Mongoose schemas. Each inventory item will have attributes like name, quantity, price, etc.
+
+4. routes/inventoryRoutes.js
+   - Manages the routes for the inventory-related API endpoints. This includes the routes to create, update, delete, and fetch inventory items.
+
+5. server.js
+   - The entry point to the backend application. This file sets up the Express server, connects to the MongoDB database, and handles incoming API requests.
+
+6. .env
+   - Stores environment variables for your application, such as the MongoDB URI or any sensitive data that shouldn’t be hardcoded in the codebase.
+
+7. package.json
+   - Lists all dependencies required for the backend, such as Express, Mongoose, and dotenv. It also defines npm scripts for starting the backend server.
+
+Frontend (React)
+
+1. public/index.html
+   - The root HTML file for the React app. It contains the basic structure of the page, including the root element where React will render the app.
+
+2. src/components/
+   - Contains reusable components that can be used throughout the frontend, such as a navigation bar, inventory list, and individual inventory item display.
+
+3. src/pages/
+   - Contains page components that represent different views of the app, such as a homepage, inventory page, and add-inventory page. Each page handles specific UI and data interactions.
+
+4. src/App.js
+   - The main component that serves as the backbone of the frontend application. It handles routing between different pages and renders the necessary components based on the route.
+
+5. src/index.js
+   - The entry point for the React app. It renders the App component and links the React app to the DOM.
+
+6. package.json
+   - Lists all the frontend dependencies, including React, React Router (for navigation), and Axios (for making HTTP requests). It also includes npm scripts for running the frontend development server.
+
+Database (MongoDB)
+- MongoDB stores all inventory data. It is connected to the backend via Mongoose, and the backend is responsible for interacting with the database to perform CRUD operations.
+
+Installation Steps:
+1. Clone the repository to your local machine.
+2. Navigate to both the backend/ and frontend/ directories in the project.
+3. Run `npm install` in both directories to install the necessary dependencies.
+4. Configure the .env file with your MongoDB URI and any other relevant environment variables.
+5. Start the backend server by running `npm run dev` in the backend/ directory.
+6. Start the frontend React app by running `npm run dev` in the frontend/ directory.
+7. Open `http://localhost:3000` to view the frontend and `http://localhost:5000` for the backend API.
+
+Additional Notes:
+- Ensure the backend and frontend are running concurrently for smooth integration.
+- The backend is responsible for data persistence with MongoDB, while the frontend communicates with the backend via HTTP requests.
+- The frontend makes use of React components and pages to display the data and allow users to interact with the inventory system.
