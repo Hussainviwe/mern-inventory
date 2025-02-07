@@ -4,10 +4,11 @@ import DashSidebar from '../components/DashSidebar';
 import DashProfile from '../components/DashProfile';
 import DashSettings from '../components/DashSettings';
 import DashHome from '../components/DashHome';
-import DashInventory from '../components/DashInventory'
+import DashInventory from '../components/DashInventory';
+import DashGallery from '../components/DashGallery';
 export default function Dashboard() {
   const location = useLocation();
-  const [tab, setTab] = useState('');
+  const [tab, setTab] = useState('')
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');
@@ -25,6 +26,7 @@ export default function Dashboard() {
       {tab === 'profile' && <DashProfile />}
       {tab === 'settings' && <DashSettings />}
       {tab === 'inventory' && <DashInventory />}
+      {tab === 'gallery' && <DashGallery />}
     </div>
   );
 }
