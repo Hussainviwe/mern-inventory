@@ -1,77 +1,40 @@
 import { Modal, Table, Button, TextInput, Label } from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { fetchInventory, addInventoryItem, deleteInventoryItem } from '../redux/inventory/inventorySlice';
 
 export default function DashInventory() {
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  const [inventoryItems, setInventoryItems] = useState([]);
+  const { items: inventoryItems, status } = useSelector((state) => state.inventory);
+
   const [showModal, setShowModal] = useState(false);
   const [itemIdToDelete, setItemIdToDelete] = useState('');
   const [newItem, setNewItem] = useState({ name: '', quantity: '', price: '', category: '' });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchInventory = async () => {
-      try {
-        const res = await fetch(`/api/inventory/`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${currentUser?.token}`, // Send the token in the header
-            'Content-Type': 'application/json'
-          }
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setInventoryItems(data.items);
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    fetchInventory();
-  }, [currentUser?.token]);
+    if (currentUser) {
+      dispatch(fetchInventory(currentUser._id));
+    }
+  }, [dispatch, currentUser]);
 
   const handleAddItem = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/inventory/`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${currentUser?.token}`, // Send the token in the header
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ...newItem, userId: currentUser._id })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setInventoryItems((prev) => [...prev, data.item]);
-        setNewItem({ name: '', quantity: '', price: '', category: '' });
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-    setLoading(false);
+    if (!currentUser) return;
+
+    const itemData = { userId: currentUser._id, item: newItem };
+    dispatch(addInventoryItem(itemData));
+
+    setNewItem({ name: '', quantity: '', price: '', category: '' });
   };
 
   const handleDeleteItem = async () => {
+    if (!currentUser || !itemIdToDelete) return;
+
+    dispatch(deleteInventoryItem({ userId: currentUser._id, itemId: itemIdToDelete }));
     setShowModal(false);
-    try {
-      const res = await fetch(`/api/inventory/${itemIdToDelete}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${currentUser?.token}`, // Send the token in the header
-          'Content-Type': 'application/json'
-        }
-      });
-      if (res.ok) {
-        setInventoryItems((prev) => prev.filter((item) => item._id !== itemIdToDelete));
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
   };
 
   return (
@@ -96,7 +59,7 @@ export default function DashInventory() {
             <TextInput type='text' value={newItem.category} onChange={(e) => setNewItem({ ...newItem, category: e.target.value })} required />
           </div>
         </div>
-        <Button type='submit' className='mt-4' isProcessing={loading}>Add Item</Button>
+        <Button type='submit' className='mt-4' isProcessing={status === 'loading'}>Add Item</Button>
       </form>
 
       {inventoryItems.length > 0 ? (

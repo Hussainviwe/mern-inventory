@@ -5,6 +5,7 @@ import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import inventoryRoutes from "./routes/inventory.route.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -31,6 +32,7 @@ app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
