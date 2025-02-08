@@ -1,7 +1,7 @@
 import Inventory from '../model/inventory.model.js';
 import { errorHandler } from '../utils/error.js';
 
-export const createItem = async (req, res, next) => {
+export const addItem = async (req, res, next) => {
   if (!req.body.name || !req.body.quantity || !req.body.price) {
     return next(errorHandler(400, 'Please provide all required fields'));
   }
