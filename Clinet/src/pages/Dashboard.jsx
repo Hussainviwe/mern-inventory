@@ -25,8 +25,9 @@ export default function Dashboard() {
       {tab === 'home' && <DashHome />}
       {tab === 'profile' && <DashProfile />}
       {tab === 'settings' && <DashSettings />}
-      {tab === 'inventory' && <DashInventory />}
       {tab === 'gallery' && <DashGallery />}
+      {tab === 'inventory' && <DashInventory />}
+      
     </div>
   );
 }

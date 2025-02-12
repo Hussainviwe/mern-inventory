@@ -1,7 +1,7 @@
 const addItem = async (itemData, token) => {
     try {
       // Send POST request to the correct API endpoint for adding an item
-      const response = await fetch("http://localhost:3000/api/inventory", { // Use /api/inventory directly
+      const response = await fetch("http://localhost:3000/api/inventory", { 
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,

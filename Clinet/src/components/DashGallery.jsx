@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const images = [
@@ -12,12 +12,18 @@ const images = [
 export default function DashGallery() {
   const [index, setIndex] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000);
-    return () => clearInterval(interval);
+  const nextImage = useCallback(() => {
+    setIndex((prevIndex) => (prevIndex + 1) % images.length);
   }, []);
+
+  const prevImage = useCallback(() => {
+    setIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(nextImage, 5000);
+    return () => clearInterval(interval);
+  }, [nextImage]);
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
@@ -25,14 +31,15 @@ export default function DashGallery() {
         Nostalgic Gemstone Memories
       </h1>
       <div className="w-full md:w-3/4 lg:w-2/3 overflow-hidden rounded-2xl shadow-xl relative">
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           <motion.img
             key={images[index]}
             src={images[index]}
-            alt="Memorial Gem Gallery"
+            alt={`Gallery image ${index + 1}`}
+            loading="lazy"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
+            exit={{ opacity: 0, scale: 1 }}
             transition={{ duration: 1.2, ease: "easeInOut" }}
             className="w-full h-[600px] md:h-[700px] object-cover rounded-2xl"
           />
@@ -47,6 +54,7 @@ export default function DashGallery() {
         {images.map((_, i) => (
           <button
             key={i}
+            aria-label={`Go to image ${i + 1}`}
             className={`w-5 h-5 rounded-full transition-all ${
               i === index ? "bg-white scale-125" : "bg-gray-600"
             }`}
@@ -56,14 +64,16 @@ export default function DashGallery() {
       </div>
       <div className="absolute bottom-6 flex space-x-4">
         <button
-          onClick={() => setIndex((index - 1 + images.length) % images.length)}
-          className="px-8 py-4 bg-gray-700 hover:bg-gray-600 text-lg font-semibold rounded-lg shadow-lg"
+          onClick={prevImage}
+          aria-label="Previous image"
+          className="px-8 py-4 bg-gray-700 hover:bg-gray-600 text-lg font-semibold rounded-lg shadow-lg focus:ring-2 focus:ring-white"
         >
           ⬅ Previous
         </button>
         <button
-          onClick={() => setIndex((index + 1) % images.length)}
-          className="px-8 py-4 bg-gray-700 hover:bg-gray-600 text-lg font-semibold rounded-lg shadow-lg"
+          onClick={nextImage}
+          aria-label="Next image"
+          className="px-8 py-4 bg-gray-700 hover:bg-gray-600 text-lg font-semibold rounded-lg shadow-lg focus:ring-2 focus:ring-white"
         >
           Next ➡
         </button>
