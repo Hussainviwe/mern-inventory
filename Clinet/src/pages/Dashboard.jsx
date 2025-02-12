@@ -8,7 +8,7 @@ import DashInventory from '../components/DashInventory';
 import DashGallery from '../components/DashGallery';
 export default function Dashboard() {
   const location = useLocation();
-  const [tab, setTab] = useState('')
+  const [tab, setTab] = useState('home');
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');
@@ -17,7 +17,7 @@ export default function Dashboard() {
     }
   }, [location.search]);
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="min-h-screen flex flex-col md:flex-row p-6 ">
       <div className='md:w-56'>
         {/* Sidebar */}
         <DashSidebar />
@@ -25,8 +25,9 @@ export default function Dashboard() {
       {tab === 'home' && <DashHome />}
       {tab === 'profile' && <DashProfile />}
       {tab === 'settings' && <DashSettings />}
-      {tab === 'inventory' && <DashInventory />}
       {tab === 'gallery' && <DashGallery />}
+      {tab === 'inventory' && <DashInventory />}
+      
     </div>
   );
 }

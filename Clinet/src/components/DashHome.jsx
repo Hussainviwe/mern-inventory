@@ -104,11 +104,11 @@ export default function DashHome() {
   const totalInventoryItems = items.length;
 
   return (
-    <div className='max-w-4xl mx-auto p-5 w-full bg-white rounded-lg shadow-lg relative'>
+    <div className='max-w-4xl mx-auto  dark:bg-slate-800 p-5 w-full bg-white rounded-lg shadow-lg relative'>
       {/* Stock Summaries */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         {/* In-Stock Summary */}
-        <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 w-full rounded-md shadow-md">
+        <div className="flex flex-col p-3 dark:bg-slate-700 gap-4 w-full rounded-md shadow-md">
           <div className="flex justify-between">
             <div>
               <h3 className="text-gray-500 text-md uppercase">In Stock Items</h3>
@@ -122,13 +122,16 @@ export default function DashHome() {
         </div>
 
         {/* Total Inventory Summary */}
-        <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 w-full rounded-md shadow-md">
+        <div className="flex flex-col p-3 dark:bg-slate-700 gap-4 w-full rounded-md shadow-md">
           <div className="flex justify-between">
             <div>
               <h3 className="text-gray-500 text-md uppercase">Total Inventory Items</h3>
               <p className="text-2xl">{totalInventoryItems}</p>
             </div>
+            <div className="flex flex-col items-center">
+            <span className="text-sm text-gray-400 mb-1">Inventory Items </span>
             <FaBox className="bg-indigo-600 text-white text-5xl p-3 shadow-lg" />
+            </div>
           </div>
         </div>
       </div>
@@ -141,7 +144,7 @@ export default function DashHome() {
 
       {/* Displaying the Stock in a Table */}
       <div className="mt-6">
-        <h2 className="my-7 text-center font-semibold text-3xl text-gray-800">Stock Items</h2>
+        <h2 className="my-7 text-center font-semibold text-3xl dark:text-white text-gray-800">Stock Items</h2>
         <Table>
           <Table.Head>
             <Table.HeadCell>Item Name</Table.HeadCell>
