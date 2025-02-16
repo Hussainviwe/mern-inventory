@@ -6,6 +6,7 @@ import DashSettings from '../components/DashSettings';
 import DashHome from '../components/DashHome';
 import DashInventory from '../components/DashInventory';
 import DashGallery from '../components/DashGallery';
+import DashAi from '../components/DashAi';
 export default function Dashboard() {
   const location = useLocation();
   const [tab, setTab] = useState('home');
@@ -27,6 +28,7 @@ export default function Dashboard() {
       {tab === 'settings' && <DashSettings />}
       {tab === 'gallery' && <DashGallery />}
       {tab === 'inventory' && <DashInventory />}
+      {tab === 'ai' && <DashAi />}
       
     </div>
   );

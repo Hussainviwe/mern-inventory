@@ -18,6 +18,14 @@ function DashboardInventory() {
   return <h2>Inventory Page</h2>;
 }
 
+function DashboardGallery() {
+  return <h2>Gallery Page</h2>;
+}
+
+function DashboardAi() {
+  return <h2>Ai Page</h2>;
+}
+
 export default function Dashboard() {
   const location = useLocation();
   const [tab, setTab] = useState('');
@@ -45,27 +53,31 @@ export default function Dashboard() {
         padding: "30px 15px",
         display: "flex",
         flexDirection: "column",
-        gap: "30px",
+        gap: "20px",
         alignItems: "center",
         boxShadow: "4px 0 12px rgba(0, 0, 0, 0.1)"
       }}>
         <h2 style={{ marginBottom: "30px", fontSize: "24px", fontWeight: "bold" }}>Dashboard</h2>
         
         {/* Sidebar Buttons Container */}
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "15px" }}>
           <SidebarButton label="🏠 Home" to="/dashboard?tab=home" active={tab === "home"} />
           <SidebarButton label="👤 Profile" to="/dashboard?tab=profile" active={tab === "profile"} />
-          <SidebarButton label="⚙️ Settings" to="/dashboard?tab=settings" active={tab === "settings"} />
-          <SidebarButton label="📦 Inventory" to="/dashboard?tab=inventory" active={tab === "inventory"} />
+          
 
+          {/* Add spacing between categories */}
+          <div style={{ height: "10px" }}></div>
+
+          <SidebarButton label="📦 Inventory" to="/dashboard?tab=inventory" active={tab === "inventory"} />
+          <SidebarButton label="🖼️ Gallery" to="/dashboard?tab=gallery" active={tab === "gallery"} />
+
+          {/* Add spacing between categories */}
+          <div style={{ height: "10px" }}></div>
+
+          <SidebarButton label="🤖 Help Bot" to="/dashboard?tab=ai" active={tab === "ai"} />
+          <SidebarButton label="⚙️ Settings" to="/dashboard?tab=settings" active={tab === "settings"} />
         </div>
       </div>
-
-      
-
-
-      
-      
     </div>
   );
 }
