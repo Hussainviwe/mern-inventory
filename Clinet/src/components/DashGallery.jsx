@@ -1,12 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Image paths relative to the public folder
 const images = [
-  "https://source.unsplash.com/1600x900/?gemstone,store",
-  "https://source.unsplash.com/1600x900/?precious-stones",
-  "https://source.unsplash.com/1600x900/?gem-mining",
-  "https://source.unsplash.com/1600x900/?jewelry",
-  "https://source.unsplash.com/1600x900/?luxury",
+  "/images/h.jpg",
+  "/images/j.jpg",
+  "/images/k.jpg",
+  "/images/g.jpg",
+  "/images/i.jpg",
+  "/images/l.jpg",
+  "/images/m.jpg",
 ];
 
 export default function DashGallery() {
@@ -26,11 +29,17 @@ export default function DashGallery() {
   }, [nextImage]);
 
   return (
-    <div className="relative w-full h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
-      <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-widest text-center drop-shadow-lg">
-        Nostalgic Gemstone Memories
+    <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white px-6 py-12">
+      <h1 className="text-5xl md:text-6xl font-extrabold mb-6 tracking-widest text-center drop-shadow-lg">
+        Timeless Gemstone Elegance
       </h1>
-      <div className="w-full md:w-3/4 lg:w-2/3 overflow-hidden rounded-2xl shadow-xl relative">
+
+      <p className="text-lg md:text-xl text-gray-300 text-center mb-8 max-w-2xl">
+        Discover the finest collection of gemstones, each with a story of its own. From luxurious 
+        diamonds to exotic rare crystals, indulge in a world of timeless beauty.
+      </p>
+
+      <div className="w-full md:w-2/3 lg:w-1/2 overflow-hidden rounded-3xl shadow-2xl relative">
         <AnimatePresence mode="wait">
           <motion.img
             key={images[index]}
@@ -41,43 +50,46 @@ export default function DashGallery() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1 }}
             transition={{ duration: 1.2, ease: "easeInOut" }}
-            className="w-full h-[600px] md:h-[700px] object-cover rounded-2xl"
+            className="w-full h-[400px] md:h-[450px] object-cover rounded-3xl"
           />
         </AnimatePresence>
-        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 flex flex-col justify-center items-center text-center p-6">
-          <p className="text-xl md:text-2xl font-semibold italic">
-            "Every gem tells a story, every memory shines forever."
-          </p>
-        </div>
       </div>
-      <div className="mt-6 flex space-x-4">
+
+      <div className="mt-6 flex space-x-3 justify-center">
         {images.map((_, i) => (
           <button
             key={i}
             aria-label={`Go to image ${i + 1}`}
-            className={`w-5 h-5 rounded-full transition-all ${
-              i === index ? "bg-white scale-125" : "bg-gray-600"
+            className={`w-4 h-4 rounded-full transition-all ${
+              i === index ? "bg-white scale-125" : "bg-gray-600 hover:bg-gray-400"
             }`}
             onClick={() => setIndex(i)}
           />
         ))}
       </div>
-      <div className="absolute bottom-6 flex space-x-4">
-        <button
-          onClick={prevImage}
-          aria-label="Previous image"
-          className="px-8 py-4 bg-gray-700 hover:bg-gray-600 text-lg font-semibold rounded-lg shadow-lg focus:ring-2 focus:ring-white"
-        >
-          ⬅ Previous
-        </button>
-        <button
-          onClick={nextImage}
-          aria-label="Next image"
-          className="px-8 py-4 bg-gray-700 hover:bg-gray-600 text-lg font-semibold rounded-lg shadow-lg focus:ring-2 focus:ring-white"
-        >
-          Next ➡
-        </button>
+
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+        <div className="bg-gray-800 p-6 rounded-xl shadow-lg hover:bg-gray-700 transition duration-300">
+          <h3 className="text-xl font-bold mb-2">💎 Rare Collection</h3>
+          <p className="text-gray-300">
+            Explore exquisite gems sourced from the rarest locations worldwide.
+          </p>
+        </div>
+        <div className="bg-gray-800 p-6 rounded-xl shadow-lg hover:bg-gray-700 transition duration-300">
+          <h3 className="text-xl font-bold mb-2">✨ Authenticity Guaranteed</h3>
+          <p className="text-gray-300">
+            Each gemstone is certified for its authenticity and brilliance.
+          </p>
+        </div>
+        <div className="bg-gray-800 p-6 rounded-xl shadow-lg hover:bg-gray-700 transition duration-300">
+          <h3 className="text-xl font-bold mb-2">🏆 Award-Winning Craftsmanship</h3>
+          <p className="text-gray-300">
+            Designed by expert artisans to reflect elegance and luxury.
+          </p>
+        </div>
       </div>
+
+      
     </div>
   );
 }
