@@ -1,18 +1,16 @@
-import { Modal, Table, Button, TextInput, Label } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { fetchInventory, addInventoryItem, deleteInventoryItem } from '../redux/inventory/inventorySlice';
+import { Bar, Pie } from 'react-chartjs-2';
+import { fetchInventory } from '../redux/inventory/inventorySlice';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
+
+// Register required components
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 export default function DashInventory() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  const { items: inventoryItems, status } = useSelector((state) => state.inventory);
-
-  const [showModal, setShowModal] = useState(false);
-  const [itemIdToDelete, setItemIdToDelete] = useState('');
-  const [newItem, setNewItem] = useState({ name: '', quantity: '', price: '', category: '' });
+  const { items: inventoryItems } = useSelector((state) => state.inventory);
 
   useEffect(() => {
     if (currentUser) {
@@ -20,93 +18,88 @@ export default function DashInventory() {
     }
   }, [dispatch, currentUser]);
 
-  const handleAddItem = async (e) => {
-    e.preventDefault();
-    if (!currentUser) return;
+  // Table Headers
+  const tableHeaders = ['Item Name', 'Quantity', 'Price ($)', 'Category', 'Last Updated'];
 
-    const itemData = { userId: currentUser._id, item: newItem };
-    dispatch(addInventoryItem(itemData));
-
-    setNewItem({ name: '', quantity: '', price: '', category: '' });
+  // Prepare Bar Chart Data
+  const barData = {
+    labels: inventoryItems.map((item) => item.name),
+    datasets: [
+      {
+        label: 'Inventory Quantity',
+        data: inventoryItems.map((item) => item.quantity),
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+      },
+    ],
   };
 
-  const handleDeleteItem = async () => {
-    if (!currentUser || !itemIdToDelete) return;
-
-    dispatch(deleteInventoryItem({ userId: currentUser._id, itemId: itemIdToDelete }));
-    setShowModal(false);
+  // Prepare Pie Chart Data
+  const pieData = {
+    labels: inventoryItems.map((item) => item.name),
+    datasets: [
+      {
+        label: 'Item Count',
+        data: inventoryItems.map(() => 1), // Each item contributes 1 count
+        backgroundColor: [
+          '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+        ],
+      },
+    ],
   };
 
   return (
     <div className='p-3'>
-      <form onSubmit={handleAddItem} className='mb-5 bg-white p-5 shadow-md rounded-md'>
-        <h2 className='text-lg font-semibold mb-3'>Add Inventory Item</h2>
-        <div className='grid grid-cols-2 gap-4'>
-          <div>
-            <Label>Name</Label>
-            <TextInput type='text' value={newItem.name} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
-          </div>
-          <div>
-            <Label>Quantity</Label>
-            <TextInput type='number' value={newItem.quantity} onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })} required />
-          </div>
-          <div>
-            <Label>Price</Label>
-            <TextInput type='number' value={newItem.price} onChange={(e) => setNewItem({ ...newItem, price: e.target.value })} required />
-          </div>
-          <div>
-            <Label>Category</Label>
-            <TextInput type='text' value={newItem.category} onChange={(e) => setNewItem({ ...newItem, category: e.target.value })} required />
-          </div>
+      <h2 className='text-2xl font-semibold mb-6'>Inventory Overview</h2>
+
+      {/* Inventory Table */}
+      <div className='mb-6 bg-white p-5 shadow-md rounded-md'>
+        <h3 className='text-lg font-semibold mb-3'>Inventory List</h3>
+        <table className='w-full border-collapse border border-gray-300'>
+          <thead>
+            <tr className='bg-gray-200'>
+              {tableHeaders.map((header, index) => (
+                <th key={index} className='border border-gray-300 p-2 text-left'>{header}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {inventoryItems.length > 0 ? (
+              inventoryItems.map((item) => (
+                <tr key={item._id} className='border border-gray-300'>
+                  <td className='p-2'>{item.name}</td>
+                  <td className='p-2'>{item.quantity}</td>
+                  <td className='p-2'>${item.price}</td>
+                  <td className='p-2'>{item.category}</td>
+                  <td className='p-2'>{new Date(item.updatedAt).toLocaleDateString()}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={tableHeaders.length} className='p-3 text-center text-gray-500'>
+                  No inventory items found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Charts Section */}
+      <div className='grid grid-cols-2 gap-6'>
+        {/* Bar Chart */}
+        <div className='bg-white p-5 shadow-md rounded-md'>
+          <h3 className='text-lg font-semibold mb-3'>Inventory Quantity (Bar Chart)</h3>
+          <Bar data={barData} options={{ responsive: true }} />
         </div>
-        <Button type='submit' className='mt-4' isProcessing={status === 'loading'}>Add Item</Button>
-      </form>
 
-      {inventoryItems.length > 0 ? (
-        <Table hoverable>
-          <Table.Head>
-            <Table.HeadCell>Date updated</Table.HeadCell>
-            <Table.HeadCell>Item Name</Table.HeadCell>
-            <Table.HeadCell>Quantity</Table.HeadCell>
-            <Table.HeadCell>Price</Table.HeadCell>
-            <Table.HeadCell>Category</Table.HeadCell>
-            <Table.HeadCell>Delete</Table.HeadCell>
-            <Table.HeadCell>Edit</Table.HeadCell>
-          </Table.Head>
-          {inventoryItems.map((item) => (
-            <Table.Body className='divide-y' key={item._id}>
-              <Table.Row>
-                <Table.Cell>{new Date(item.updatedAt).toLocaleDateString()}</Table.Cell>
-                <Table.Cell><Link to={`/inventory/${item._id}`}>{item.name}</Link></Table.Cell>
-                <Table.Cell>{item.quantity}</Table.Cell>
-                <Table.Cell>${item.price}</Table.Cell>
-                <Table.Cell>{item.category}</Table.Cell>
-                <Table.Cell>
-                  <span onClick={() => { setShowModal(true); setItemIdToDelete(item._id); }} className='text-red-500 cursor-pointer'>Delete</span>
-                </Table.Cell>
-                <Table.Cell>
-                  <Link to={`/update-item/${item._id}`} className='text-teal-500'>Edit</Link>
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          ))}
-        </Table>
-      ) : (
-        <p>No inventory items found!</p>
-      )}
-
-      <Modal show={showModal} onClose={() => setShowModal(false)} popup>
-        <Modal.Body>
-          <div className='text-center'>
-            <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 mb-4 mx-auto' />
-            <h3>Are you sure you want to delete this item?</h3>
-            <div className='flex justify-center gap-4'>
-              <Button color='failure' onClick={handleDeleteItem}>Yes, I'm sure</Button>
-              <Button color='gray' onClick={() => setShowModal(false)}>No, cancel</Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+        {/* Pie Chart */}
+        <div className='bg-white p-5 shadow-md rounded-md'>
+          <h3 className='text-lg font-semibold mb-3'>Item Distribution (Pie Chart)</h3>
+          <Pie data={pieData} options={{ responsive: true }} />
+        </div>
+      </div>
     </div>
   );
 }
