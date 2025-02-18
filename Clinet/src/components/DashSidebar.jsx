@@ -18,9 +18,6 @@ function DashboardInventory() {
   return <h2>Inventory Page</h2>;
 }
 
-function DashboardGallery() {
-  return <h2>Gallery Page</h2>;
-}
 
 function DashboardAi() {
   return <h2>Ai Page</h2>;
@@ -69,8 +66,7 @@ export default function Dashboard() {
           <div style={{ height: "10px" }}></div>
 
           <SidebarButton label="📦 Inventory" to="/dashboard?tab=inventory" active={tab === "inventory"} />
-          <SidebarButton label="🖼️ Gallery" to="/dashboard?tab=gallery" active={tab === "gallery"} />
-
+          
           {/* Add spacing between categories */}
           <div style={{ height: "10px" }}></div>
 

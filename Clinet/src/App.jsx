@@ -4,6 +4,8 @@ import About from "./pages/About";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
+import Gallery from "./pages/Gallery";
+import Shop from "./pages/Shop";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ThemeLayout from "./components/ThemeLayout";
@@ -18,6 +20,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/signin" element={<Signin />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/shop" element={<Shop />} />
           <Route path="/signup" element={<Signup />} />
           <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />

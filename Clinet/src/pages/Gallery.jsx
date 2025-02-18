@@ -12,7 +12,7 @@ const images = [
   "/images/m.jpg",
 ];
 
-export default function DashGallery() {
+export default function Gallery() {
   const [index, setIndex] = useState(0);
 
   const nextImage = useCallback(() => {
