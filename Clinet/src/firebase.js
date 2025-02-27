@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -7,13 +8,16 @@ import { getAuth } from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "mern-inventory-3d09c.firebaseapp.com",
-  projectId: "mern-inventory-3d09c",
-  storageBucket: "mern-inventory-3d09c.firebasestorage.app",
-  messagingSenderId: "987531136469",
-  appId: "1:987531136469:web:291fa7d59a0cbe39e8815c"
+  apiKey: "AIzaSyB_eeRJOYvXugnPXX22m2_K3SrIjGzm99Q",
+  authDomain: "inventory-7668a.firebaseapp.com",
+  databaseURL: "https://inventory-7668a-default-rtdb.firebaseio.com",
+  projectId: "inventory-7668a",
+  storageBucket: "inventory-7668a.firebasestorage.app",
+  messagingSenderId: "682463844187",
+  appId: "1:682463844187:web:bdc083fa55d774183b6c7e",
+  measurementId: "G-LGLJCFWG1C"
 };
 
 // Initialize Firebase
